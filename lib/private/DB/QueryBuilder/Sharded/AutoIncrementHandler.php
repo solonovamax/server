@@ -8,7 +8,9 @@ declare(strict_types=1);
 
 namespace OC\DB\QueryBuilder\Sharded;
 
+use OC\DB\QueryBuilder\QueryBuilder;
 use OCP\ICacheFactory;
+use OCP\IDBConnection;
 use OCP\IMemcache;
 use OCP\IMemcacheTTL;
 
@@ -108,7 +110,7 @@ class AutoIncrementHandler {
 		}
 
 		// discard the encoded initial shard
-		$current = $this->getMaxFromDb($shardDefinition) >> 8;
+		$current = $this->getMaxFromDb($shardDefinition);
 		$next = max($current, self::MIN_VALID_KEY) + 1;
 		if ($cache->cas($shardDefinition->table, 'empty-placeholder', $next)) {
 			return $next;
@@ -131,19 +133,22 @@ class AutoIncrementHandler {
 	}
 
 	/**
-	 * Get the maximum primary key value from the shards
+	 * Get the maximum primary key value from the shards, note that this has already stripped any embedded shard id
 	 */
 	private function getMaxFromDb(ShardDefinition $shardDefinition): int {
-		$max = 0;
+		$max = $shardDefinition->fromFileId;
+		$query = $this->shardConnectionManager->getConnection($shardDefinition, 0)->getQueryBuilder();
+		$query->select($shardDefinition->primaryKey)
+			->from($shardDefinition->table)
+			->orderBy($shardDefinition->primaryKey, 'DESC')
+			->setMaxResults(1);
 		foreach ($shardDefinition->getAllShards() as $shard) {
 			$connection = $this->shardConnectionManager->getConnection($shardDefinition, $shard);
-			$query = $connection->getQueryBuilder();
-			$query->select($shardDefinition->primaryKey)
-				->from($shardDefinition->table)
-				->orderBy($shardDefinition->primaryKey, 'DESC')
-				->setMaxResults(1);
-			$result = $query->executeQuery()->fetchOne();
+			$result = $query->executeQuery($connection)->fetchOne();
 			if ($result) {
+				if ($result > $shardDefinition->fromFileId) {
+					$result = $result >> 8;
+				}
 				$max = max($max, $result);
 			}
 		}
