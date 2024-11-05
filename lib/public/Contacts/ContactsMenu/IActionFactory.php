@@ -34,4 +34,22 @@ interface IActionFactory {
 	 * @return ILinkAction
 	 */
 	public function newEMailAction(string $icon, string $name, string $email, string $appId = ''): ILinkAction;
+
+	/**
+	 * Construct and return a new javascript hook action for the contacts menu
+	 *
+	 * @since 31.0.0
+	 *
+	 * @param string $icon full path to the action's icon
+	 * @param string $name localized name of the action
+	 * @param string $hook id of the javascript hook as registered in the frontend
+	 * @param string $appId the appName registering the action
+	 * @return IAction
+	 */
+	public function newJavascriptAction(
+		string $icon,
+		string $name,
+		string $hook,
+		string $appId = '',
+	): IAction;
 }

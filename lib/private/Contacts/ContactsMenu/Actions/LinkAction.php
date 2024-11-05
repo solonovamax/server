@@ -8,6 +8,8 @@ namespace OC\Contacts\ContactsMenu\Actions;
 use OCP\Contacts\ContactsMenu\ILinkAction;
 
 class LinkAction implements ILinkAction {
+	public const TYPE = 'LinkAction';
+
 	private string $icon = '';
 	private string $name = '';
 	private string $href = '';
@@ -64,6 +66,7 @@ class LinkAction implements ILinkAction {
 	 */
 	public function jsonSerialize(): array {
 		return [
+			'type' => self::TYPE,
 			'title' => $this->name,
 			'icon' => $this->icon,
 			'hyperlink' => $this->href,

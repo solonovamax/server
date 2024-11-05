@@ -22,8 +22,8 @@
 		<NcActions v-if="actions.length"
 			:inline="contact.topAction ? 1 : 0">
 			<template v-for="(action, idx) in actions">
-				<NcActionLink v-if="action.hyperlink !== '#'"
-					:key="idx"
+				<NcActionLink v-if="action.type === 'LinkAction' && action.hyperlink !== '#'"
+					:key="`${idx}-link`"
 					:href="action.hyperlink"
 					class="other-actions">
 					<template #icon>
@@ -31,12 +31,24 @@
 					</template>
 					{{ action.title }}
 				</NcActionLink>
-				<NcActionText v-else :key="idx" class="other-actions">
+				<NcActionText v-else-if="action.type === 'LinkAction'"
+					:key="`${idx}-text`"
+					class="other-actions">
 					<template #icon>
 						<img aria-hidden="true" class="contact__action__icon" :src="action.icon">
 					</template>
 					{{ action.title }}
 				</NcActionText>
+				<NcActionButton v-else-if="action.type === 'JavascriptAction' && hasContactsMenuHook(action.hook)"
+					:key="`${idx}-hook`"
+					:close-after-click="true"
+					class="other-actions"
+					@click="callContactsMenuHook(action.hook)">
+					<template #icon>
+						<img aria-hidden="true" class="contact__action__icon" :src="action.icon">
+					</template>
+					{{ action.title }}
+				</NcActionButton>
 			</template>
 		</NcActions>
 	</li>
@@ -45,14 +57,20 @@
 <script>
 import NcActionLink from '@nextcloud/vue/dist/Components/NcActionLink.js'
 import NcActionText from '@nextcloud/vue/dist/Components/NcActionText.js'
+import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
 import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
+import {
+	callContactsMenuHook,
+	hasContactsMenuHook,
+} from '@nextcloud/vue/dist/Functions/contactsMenu.js'
 
 export default {
 	name: 'Contact',
 	components: {
 		NcActionLink,
 		NcActionText,
+		NcActionButton,
 		NcActions,
 		NcAvatar,
 	},
@@ -79,6 +97,10 @@ export default {
 			}
 			return undefined
 		},
+	},
+	methods: {
+		hasContactsMenuHook,
+		callContactsMenuHook,
 	},
 }
 </script>
