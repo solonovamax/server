@@ -523,7 +523,6 @@ export default defineComponent({
 	},
 
 	mounted() {
-		this.filtersStore.init()
 		this.fetchContent()
 
 		subscribe('files:node:deleted', this.onNodeDeleted)

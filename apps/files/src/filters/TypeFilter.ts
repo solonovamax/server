@@ -4,7 +4,6 @@
  */
 import type { IFileListFilterChip, INode } from '@nextcloud/files'
 
-import { subscribe } from '@nextcloud/event-bus'
 import { FileListFilter, registerFileListFilter } from '@nextcloud/files'
 import { t } from '@nextcloud/l10n'
 import Vue from 'vue'
@@ -94,7 +93,6 @@ class TypeFilter extends FileListFilter {
 
 	constructor() {
 		super('files:type', 10)
-		subscribe('files:navigation:changed', () => this.setPreset())
 	}
 
 	public async mount(el: HTMLElement) {
@@ -139,6 +137,10 @@ class TypeFilter extends FileListFilter {
 			}
 			return false
 		})
+	}
+
+	public reset(): void {
+		this.setPreset()
 	}
 
 	public setPreset(presets?: ITypePreset[]) {
