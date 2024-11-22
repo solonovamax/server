@@ -52,9 +52,10 @@ class RemoteException extends \Exception {
 function handleException($e) {
 	try {
 		$request = \OC::$server->getRequest();
+		$isError = $e instanceof Error;
 		// in case the request content type is text/xml - we assume it's a WebDAV request
 		$isXmlContentType = strpos($request->getHeader('Content-Type'), 'text/xml');
-		if ($isXmlContentType === 0) {
+		if ($isError === false && $isXmlContentType === 0) {
 			// fire up a simple server to properly process the exception
 			$server = new Server();
 			if (!($e instanceof RemoteException)) {
