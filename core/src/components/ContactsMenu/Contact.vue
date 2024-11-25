@@ -43,7 +43,7 @@
 					:key="`${idx}-hook`"
 					:close-after-click="true"
 					class="other-actions"
-					@click="callContactsMenuHook(action.hook)">
+					@click="callContactsMenuHook(action.hook, contact)">
 					<template #icon>
 						<img aria-hidden="true" class="contact__action__icon" :src="action.icon">
 					</template>
