@@ -22,7 +22,7 @@
 		<NcActions v-if="actions.length"
 			:inline="contact.topAction ? 1 : 0">
 			<template v-for="(action, idx) in actions">
-				<NcActionLink v-if="action.type === 'LinkAction' && action.hyperlink !== '#'"
+				<NcActionLink v-if="action.hyperlink !== '#'"
 					:key="`${idx}-link`"
 					:href="action.hyperlink"
 					class="other-actions">
@@ -31,25 +31,23 @@
 					</template>
 					{{ action.title }}
 				</NcActionLink>
-				<NcActionText v-else-if="action.type === 'LinkAction'"
-					:key="`${idx}-text`"
-					class="other-actions">
+				<NcActionText v-else :key="`${idx}-text`" class="other-actions">
 					<template #icon>
 						<img aria-hidden="true" class="contact__action__icon" :src="action.icon">
 					</template>
 					{{ action.title }}
 				</NcActionText>
-				<NcActionButton v-else-if="action.type === 'JavascriptAction' && hasContactsMenuHook(action.hook)"
-					:key="`${idx}-hook`"
-					:close-after-click="true"
-					class="other-actions"
-					@click="callContactsMenuHook(action.hook, contact)">
-					<template #icon>
-						<img aria-hidden="true" class="contact__action__icon" :src="action.icon">
-					</template>
-					{{ action.title }}
-				</NcActionButton>
 			</template>
+			<NcActionButton v-for="action in jsActions"
+				:key="action.id"
+				:close-after-click="true"
+				class="other-actions"
+				@click="action.callback(contact)">
+				<template #icon>
+					<NcIconSvgWrapper :svg="action.iconSvg(contact)" />
+				</template>
+				{{ action.displayName(contact) }}
+			</NcActionButton>
 		</NcActions>
 	</li>
 </template>
@@ -60,10 +58,8 @@ import NcActionText from '@nextcloud/vue/dist/Components/NcActionText.js'
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
 import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
-import {
-	callContactsMenuHook,
-	hasContactsMenuHook,
-} from '@nextcloud/vue/dist/Functions/contactsMenu.js'
+import NcIconSvgWrapper from '@nextcloud/vue/dist/Components/NcIconSvgWrapper.js'
+import { getEnabledContactsMenuActions } from '@nextcloud/vue/dist/Functions/contactsMenu.js'
 
 export default {
 	name: 'Contact',
@@ -73,6 +69,7 @@ export default {
 		NcActionButton,
 		NcActions,
 		NcAvatar,
+		NcIconSvgWrapper,
 	},
 	props: {
 		contact: {
@@ -87,6 +84,9 @@ export default {
 			}
 			return this.contact.actions
 		},
+		jsActions() {
+			return getEnabledContactsMenuActions(this.contact)
+		},
 		preloadedUserStatus() {
 			if (this.contact.status) {
 				return {
@@ -97,10 +97,6 @@ export default {
 			}
 			return undefined
 		},
-	},
-	methods: {
-		hasContactsMenuHook,
-		callContactsMenuHook,
 	},
 }
 </script>
