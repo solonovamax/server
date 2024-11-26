@@ -19,7 +19,6 @@ use OCA\Files_Versions\Storage;
 use OCA\Files_Versions\Versions\IVersionManager;
 use OCP\Constants;
 use OCP\Files\IMimeTypeLoader;
-use OCP\IConfig;
 use OCP\IUser;
 use OCP\Server;
 use OCP\Share\IShare;
@@ -79,7 +78,10 @@ class VersioningTest extends \Test\TestCase {
 		parent::setUp();
 
 		$config = \OC::$server->getConfig();
-		$mockConfig = $this->createMock(IConfig::class);
+		$mockConfig = $this->getMockBuilder(AllConfig::class)
+			->onlyMethods(['getSystemValue'])
+			->setConstructorArgs([Server::get(\OC\SystemConfig::class)])
+			->getMock();
 		$mockConfig->expects($this->any())
 			->method('getSystemValue')
 			->willReturnCallback(function ($key, $default) use ($config) {
