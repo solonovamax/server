@@ -44,7 +44,8 @@
 				class="other-actions"
 				@click="action.callback(contact)">
 				<template #icon>
-					<NcIconSvgWrapper :svg="action.iconSvg(contact)" />
+					<NcIconSvgWrapper class="contact__action__icon-svg"
+						:svg="action.iconSvg(contact)" />
 				</template>
 				{{ action.displayName(contact) }}
 			</NcActionButton>
@@ -115,6 +116,10 @@ export default {
 			height: 20px;
 			padding: 12px;
 			filter: var(--background-invert-if-dark);
+		}
+
+		&__icon-svg {
+			padding: 5px;
 		}
 	}
 
