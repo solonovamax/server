@@ -7071,6 +7071,251 @@
                 }
             }
         },
+        "/ocs/v2.php/twofactor/state": {
+            "post": {
+                "operationId": "twofactor-state",
+                "summary": "Get Two Factor state of specific users",
+                "tags": [
+                    "twofactor"
+                ],
+                "security": [
+                    {
+                        "bearer_auth": []
+                    },
+                    {
+                        "basic_auth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "State Request",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "users"
+                                ],
+                                "properties": {
+                                    "users": {
+                                        "type": "array",
+                                        "description": "Collection of user identifiers",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": ["user1", "user2", "user3"]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "State Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "object",
+                                                    "example": {
+                                                        "user1": {
+                                                            "backup_codes": true,
+                                                            "totp": false
+                                                        },
+                                                        "user2": {
+                                                            "backup_codes": false,
+                                                            "totp": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ocs/v2.php/twofactor/enable": {
+            "post": {
+                "operationId": "twofactor-enable",
+                "summary": "Enable Two Factor Authentication for a specific user and specific TFA provider. Not all TFA providers can be enabled this way, some require user interaction",
+                "tags": [
+                    "twofactor"
+                ],
+                "security": [
+                    {
+                        "bearer_auth": []
+                    },
+                    {
+                        "basic_auth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "Enable Request",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "users"
+                                ],
+                                "properties": {
+                                    "user": {
+                                        "type": "string",
+                                        "description": "System user identifier"
+                                    },
+                                    "providers": {
+                                        "type": "array",
+                                        "description": "Collection of provider identifiers",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": ["backup_codes", "totp"]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Enable Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "object",
+                                                    "example": {
+                                                        "backup_codes": true,
+                                                        "totp": false
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ocs/v2.php/twofactor/disable": {
+            "post": {
+                "operationId": "twofactor-disable",
+                "summary": "Disable Two Factor Authentication for a specific user and specific TFA provider",
+                "tags": [
+                    "twofactor"
+                ],
+                "security": [
+                    {
+                        "bearer_auth": []
+                    },
+                    {
+                        "basic_auth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "Disable Request",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "users"
+                                ],
+                                "properties": {
+                                    "user": {
+                                        "type": "string",
+                                        "description": "System user identifier"
+                                    },
+                                    "providers": {
+                                        "type": "array",
+                                        "description": "Collection of provider identifiers",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": ["backup_codes", "totp"]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Disable Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "object",
+                                                    "example": {
+                                                        "backup_codes": true,
+                                                        "totp": false
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/ocs/v2.php/search/providers": {
             "get": {
                 "operationId": "unified_search-get-providers",

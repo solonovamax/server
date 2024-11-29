@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace OC\Core\Controller;
 
 use OC\Authentication\TwoFactorAuth\ProviderManager;
+use OCP\AppFramework\Http;
 use OCP\Authentication\TwoFactorAuth\IRegistry;
 use OCP\AppFramework\Http\Attribute\ApiRoute;
 use OCP\AppFramework\Http\Attribute\PublicPage;
@@ -28,7 +29,7 @@ class TwoFactorApiController extends \OCP\AppFramework\OCSController {
 	}
 
 	/**
-	 * Get two factor provider states
+	 * Get two factor authentication provider states
 	 *
 	 * @param array<string> $users collection of system user ids
 	 * 
@@ -46,64 +47,61 @@ class TwoFactorApiController extends \OCP\AppFramework\OCSController {
 				$states[$userId] = $this->tfRegistry->getProviderStates($userObject);
 			}
 		}
-
 		return new DataResponse($states);
 	}
 
 	/**
-	 * Enable two factor providers
+	 * Enable two factor authentication providers for specific user
 	 *
-	 * @param array<string:array<string>> $users collection of system user ids and provider ids
+	 * @param string $user system user identifier
+	 * @param array<string> $providers collection of TFA provider ids
 	 * 
-	 * @return DataResponse<Http::STATUS_OK, array{userId: array{providerId: bool}}>
+	 * @return DataResponse<Http::STATUS_OK, array{providerId: bool}>
 	 *
-	 * 200: user/provider states
+	 * 200: provider states
+	 * 404: user not found
 	 */
 	#[PublicPage]
 	#[ApiRoute(verb: 'POST', url: '/enable', root: '/twofactor')]
-	public function enable(array $users = []): DataResponse {
-		$states = [];
-		foreach ($users as $userId => $providers) {
-			$userObject = $this->userManager->get($userId);
-			if ($userObject !== null) {
-				if (is_array($providers)) {
-					foreach ($providers as $providerId) {
-						$this->tfManager->tryEnableProviderFor($providerId, $userObject);
-					}
+	public function enable(string $user, array $providers = []): DataResponse {
+		$userObject = $this->userManager->get($user);
+		if ($userObject !== null) {
+			if (is_array($providers)) {
+				foreach ($providers as $providerId) {
+					$this->tfManager->tryEnableProviderFor($providerId, $userObject);
 				}
-				$states[$userId] = $this->tfRegistry->getProviderStates($userObject);
 			}
+			$state = $this->tfRegistry->getProviderStates($userObject);
+			return new DataResponse($state);
 		}
-
-		return new DataResponse($states);
+		return new DataResponse([], Http::STATUS_NOT_FOUND);
 	}
 
 	/**
-	 * Disable two factor providers
+	 * Disable two factor authentication providers for specific user
 	 *
-	 * @param array<string:array<string>> $users collection of system user ids and provider ids
+	 * @param string $user system user identifier
+	 * @param array<string> $providers collection of TFA provider ids
 	 * 
-	 * @return DataResponse<Http::STATUS_OK, array{userId: array{providerId: bool}}>
+	 * @return DataResponse<Http::STATUS_OK, array{providerId: bool}>
 	 *
-	 * 200: user/provider states
+	 * 200: provider states
+	 * 404: user not found
 	 */
 	#[PublicPage]
 	#[ApiRoute(verb: 'POST', url: '/disable', root: '/twofactor')]
-	public function disable(array $users = []): DataResponse {
-		$states = [];
-		foreach ($users as $userId => $providers) {
-			$userObject = $this->userManager->get($userId);
-			if ($userObject !== null) {
-				if (is_array($providers)) {
-					foreach ($providers as $providerId) {
-						$this->tfManager->tryDisableProviderFor($providerId, $userObject);
-					}
+	public function disable(string $user, array $providers = []): DataResponse {
+		$userObject = $this->userManager->get($user);
+		if ($userObject !== null) {
+			if (is_array($providers)) {
+				foreach ($providers as $providerId) {
+					$this->tfManager->tryDisableProviderFor($providerId, $userObject);
 				}
-				$states[$userId] = $this->tfRegistry->getProviderStates($userObject);
 			}
+			$state = $this->tfRegistry->getProviderStates($userObject);
+			return new DataResponse($state);
 		}
-
-		return new DataResponse($states);
+		return new DataResponse([], Http::STATUS_NOT_FOUND);
 	}
 
 }
