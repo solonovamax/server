@@ -33,7 +33,7 @@ class TwoFactorApiController extends \OCP\AppFramework\OCSController {
 	 *
 	 * @param array<string> $users collection of system user ids
 	 * 
-	 * @return DataResponse<Http::STATUS_OK, array{userId: array{providerId: bool}}>
+	 * @return DataResponse<Http::STATUS_OK, list{string: list{string: bool}}, array{}>
 	 *
 	 * 200: user/provider states
 	 */
@@ -56,7 +56,7 @@ class TwoFactorApiController extends \OCP\AppFramework\OCSController {
 	 * @param string $user system user identifier
 	 * @param array<string> $providers collection of TFA provider ids
 	 * 
-	 * @return DataResponse<Http::STATUS_OK, array{providerId: bool}>
+	 * @return DataResponse<Http::STATUS_OK|Http::STATUS_NOT_FOUND, list{string: bool}, array{}>
 	 *
 	 * 200: provider states
 	 * 404: user not found
@@ -83,7 +83,7 @@ class TwoFactorApiController extends \OCP\AppFramework\OCSController {
 	 * @param string $user system user identifier
 	 * @param array<string> $providers collection of TFA provider ids
 	 * 
-	 * @return DataResponse<Http::STATUS_OK, array{providerId: bool}>
+	 * @return DataResponse<Http::STATUS_OK|Http::STATUS_NOT_FOUND, list{string: bool}, array{}>
 	 *
 	 * 200: provider states
 	 * 404: user not found
