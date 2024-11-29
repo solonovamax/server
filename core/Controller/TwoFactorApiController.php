@@ -31,7 +31,7 @@ class TwoFactorApiController extends \OCP\AppFramework\OCSController {
 	/**
 	 * Get two factor authentication provider states
 	 *
-	 * @param array<string> $users collection of system user ids
+	 * @param list<string> $users collection of system user ids
 	 * 
 	 * @return DataResponse<Http::STATUS_OK, list{string: list{string: bool}}, array{}>
 	 *
@@ -54,7 +54,7 @@ class TwoFactorApiController extends \OCP\AppFramework\OCSController {
 	 * Enable two factor authentication providers for specific user
 	 *
 	 * @param string $user system user identifier
-	 * @param array<string> $providers collection of TFA provider ids
+	 * @param list<string> $providers collection of TFA provider ids
 	 * 
 	 * @return DataResponse<Http::STATUS_OK|Http::STATUS_NOT_FOUND, list{string: bool}, array{}>
 	 *
@@ -81,7 +81,7 @@ class TwoFactorApiController extends \OCP\AppFramework\OCSController {
 	 * Disable two factor authentication providers for specific user
 	 *
 	 * @param string $user system user identifier
-	 * @param array<string> $providers collection of TFA provider ids
+	 * @param list<string> $providers collection of TFA provider ids
 	 * 
 	 * @return DataResponse<Http::STATUS_OK|Http::STATUS_NOT_FOUND, list{string: bool}, array{}>
 	 *
