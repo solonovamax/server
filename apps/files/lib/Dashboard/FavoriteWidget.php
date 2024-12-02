@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace OCA\Files\Dashboard;
 
 use OCA\Files\AppInfo\Application;
-use OCP\Dashboard\IAPIWidget;
 use OCP\Dashboard\IAPIWidgetV2;
 use OCP\Dashboard\IButtonWidget;
 use OCP\Dashboard\IIconWidget;
@@ -25,7 +24,7 @@ use OCP\ITagManager;
 use OCP\IURLGenerator;
 use OCP\IUserManager;
 
-class FavoriteWidget implements IIconWidget, IAPIWidget, IAPIWidgetV2, IButtonWidget {
+class FavoriteWidget implements IIconWidget, IAPIWidgetV2, IButtonWidget {
 	public function __construct(
 		private readonly IL10N             $l10n,
 		private readonly IURLGenerator     $urlGenerator,
