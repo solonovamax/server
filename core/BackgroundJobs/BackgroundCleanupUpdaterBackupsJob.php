@@ -56,7 +56,7 @@ class BackgroundCleanupUpdaterBackupsJob extends QueuedJob {
 
 				if ($realPath === false) {
 					$pathName = $dir->getPathname();
-					$this->log->warn("Skipping updater backup folder $pathname (not found)");
+					$this->log->warning("Skipping updater backup folder $pathname (not found)");
 					continue;
 				}
 
@@ -77,7 +77,7 @@ class BackgroundCleanupUpdaterBackupsJob extends QueuedJob {
 			}
 			$this->log->info('Background job to clean-up updater backups has finished');
 		} else {
-			$this->log->warn("Skipping updater backup clean-up - could not find updater backup folder $backupFolderPath");
+			$this->log->warning("Skipping updater backup clean-up - could not find updater backup folder $backupFolderPath");
 		}
 	}
 }
