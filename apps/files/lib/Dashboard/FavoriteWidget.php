@@ -14,7 +14,6 @@ use OCP\Dashboard\IAPIWidget;
 use OCP\Dashboard\IAPIWidgetV2;
 use OCP\Dashboard\IButtonWidget;
 use OCP\Dashboard\IIconWidget;
-use OCP\Dashboard\IWidget;
 use OCP\Dashboard\Model\WidgetButton;
 use OCP\Dashboard\Model\WidgetItem;
 use OCP\Dashboard\Model\WidgetItems;
@@ -25,45 +24,26 @@ use OCP\IPreview;
 use OCP\ITagManager;
 use OCP\IURLGenerator;
 use OCP\IUserManager;
-use OCP\IUserSession;
 
-class FavouriteWidget implements IWidget, IIconWidget, IAPIWidget, IAPIWidgetV2, IButtonWidget {
-	private IUserSession $userSession;
-	private IL10N $l10n;
-	private IURLGenerator $urlGenerator;
-	private IMimeTypeDetector $mimeTypeDetector;
-	private IUserManager $userManager;
-	private ITagManager $tagManager;
-	private IRootFolder $rootFolder;
-	private IPreview $previewManager;
-	public const FAVORITE_LIMIT = 50;
-
+class FavoriteWidget implements IIconWidget, IAPIWidget, IAPIWidgetV2, IButtonWidget {
 	public function __construct(
-		IUserSession $userSession,
-		IL10N $l10n,
-		IURLGenerator $urlGenerator,
-		IMimeTypeDetector $mimeTypeDetector,
-		IUserManager $userManager,
-		ITagManager $tagManager,
-		IRootFolder $rootFolder,
-		IPreview $previewManager,
+		private readonly IL10N             $l10n,
+		private readonly IURLGenerator     $urlGenerator,
+		private readonly IMimeTypeDetector $mimeTypeDetector,
+		private readonly IUserManager      $userManager,
+		private readonly ITagManager       $tagManager,
+		private readonly IRootFolder       $rootFolder,
+		private readonly IPreview          $previewManager,
 	) {
-		$this->userSession = $userSession;
-		$this->l10n = $l10n;
-		$this->urlGenerator = $urlGenerator;
-		$this->mimeTypeDetector = $mimeTypeDetector;
-		$this->userManager = $userManager;
-		$this->tagManager = $tagManager;
-		$this->rootFolder = $rootFolder;
-		$this->previewManager = $previewManager;
+
 	}
 
 	public function getId(): string {
-		return Application::APP_ID;
+		return Application::APP_ID.'-favorites';
 	}
 
 	public function getTitle(): string {
-		return $this->l10n->t('Favorites');
+		return $this->l10n->t('Favorite files');
 	}
 
 	public function getOrder(): int {
@@ -71,24 +51,21 @@ class FavouriteWidget implements IWidget, IIconWidget, IAPIWidget, IAPIWidgetV2,
 	}
 
 	public function getIconClass(): string {
-		return 'icon-files-dark';
+		return 'icon-star-dark';
 	}
 
 	public function getIconUrl(): string {
-		return $this->urlGenerator->getAbsoluteURL($this->urlGenerator->imagePath('files', 'app-dark.svg'));
+		return $this->urlGenerator->getAbsoluteURL(
+			$this->urlGenerator->imagePath('files', 'app-favorite.svg')
+		);
 	}
 
 	public function getUrl(): ?string {
-		return null;
+		return $this->urlGenerator->getAbsoluteURL('index.php/apps/files/favorites');
 	}
 
 	public function load(): void {
-		$user = $this->userSession->getUser();
-		if ($user === null) {
-			return;
-		}
 		return;
-		//Util::addScript(Application::APP_ID, 'recommendations-dashboard');
 	}
 
 	public function getItems(string $userId, ?string $since = null, int $limit = 7): array {
@@ -100,8 +77,6 @@ class FavouriteWidget implements IWidget, IIconWidget, IAPIWidget, IAPIWidgetV2,
 		$tags = $this->tagManager->load('files', [], false, $userId);
 		$favorites = $tags->getFavorites();
 		if (empty($favorites)) {
-			return [];
-		} elseif (isset($favorites[self::FAVORITE_LIMIT])) {
 			return [];
 		}
 		$favoriteNodes = [];

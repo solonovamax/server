@@ -7,14 +7,14 @@ namespace Composer\Autoload;
 class ComposerStaticInitFiles
 {
     public static $prefixLengthsPsr4 = array (
-        'O' =>
+        'O' => 
         array (
             'OCA\\Files\\' => 10,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'OCA\\Files\\' =>
+        'OCA\\Files\\' => 
         array (
             0 => __DIR__ . '/..' . '/../lib',
         ),
@@ -63,7 +63,8 @@ class ComposerStaticInitFiles
         'OCA\\Files\\Controller\\TemplateController' => __DIR__ . '/..' . '/../lib/Controller/TemplateController.php',
         'OCA\\Files\\Controller\\TransferOwnershipController' => __DIR__ . '/..' . '/../lib/Controller/TransferOwnershipController.php',
         'OCA\\Files\\Controller\\ViewController' => __DIR__ . '/..' . '/../lib/Controller/ViewController.php',
-		'OCA\\Files\\Dashboard\\FavouriteWidget' => __DIR__ . '/..' . '/../lib/Dashboard/FavouriteWidget.php',        'OCA\\Files\\Db\\OpenLocalEditor' => __DIR__ . '/..' . '/../lib/Db/OpenLocalEditor.php',
+        'OCA\\Files\\Dashboard\\FavoriteWidget' => __DIR__ . '/..' . '/../lib/Dashboard/FavoriteWidget.php',
+        'OCA\\Files\\Db\\OpenLocalEditor' => __DIR__ . '/..' . '/../lib/Db/OpenLocalEditor.php',
         'OCA\\Files\\Db\\OpenLocalEditorMapper' => __DIR__ . '/..' . '/../lib/Db/OpenLocalEditorMapper.php',
         'OCA\\Files\\Db\\TransferOwnership' => __DIR__ . '/..' . '/../lib/Db/TransferOwnership.php',
         'OCA\\Files\\Db\\TransferOwnershipMapper' => __DIR__ . '/..' . '/../lib/Db/TransferOwnershipMapper.php',
