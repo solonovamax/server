@@ -31,9 +31,9 @@ class TwoFactorApiController extends \OCP\AppFramework\OCSController {
 	/**
 	 * Get two factor authentication provider states
 	 *
-	 * @param list<string> $users collection of system user ids
+	 * @param array<string> $users collection of system user ids
 	 * 
-	 * @return DataResponse<Http::STATUS_OK, list{string: list{string: bool}}, array{}>
+	 * @return DataResponse<Http::STATUS_OK, array<string, array<string, bool>>, array{}>
 	 *
 	 * 200: user/provider states
 	 */
@@ -54,9 +54,9 @@ class TwoFactorApiController extends \OCP\AppFramework\OCSController {
 	 * Enable two factor authentication providers for specific user
 	 *
 	 * @param string $user system user identifier
-	 * @param list<string> $providers collection of TFA provider ids
+	 * @param array<string> $providers collection of TFA provider ids
 	 * 
-	 * @return DataResponse<Http::STATUS_OK|Http::STATUS_NOT_FOUND, list{string: bool}, array{}>
+	 * @return DataResponse<Http::STATUS_OK, array<string, bool>, array{}>|DataResponse<Http::STATUS_NOT_FOUND, null, array{}>
 	 *
 	 * 200: provider states
 	 * 404: user not found
@@ -66,24 +66,22 @@ class TwoFactorApiController extends \OCP\AppFramework\OCSController {
 	public function enable(string $user, array $providers = []): DataResponse {
 		$userObject = $this->userManager->get($user);
 		if ($userObject !== null) {
-			if (is_array($providers)) {
-				foreach ($providers as $providerId) {
-					$this->tfManager->tryEnableProviderFor($providerId, $userObject);
-				}
+			foreach ($providers as $providerId) {
+				$this->tfManager->tryEnableProviderFor($providerId, $userObject);
 			}
 			$state = $this->tfRegistry->getProviderStates($userObject);
 			return new DataResponse($state);
 		}
-		return new DataResponse([], Http::STATUS_NOT_FOUND);
+		return new DataResponse(null, Http::STATUS_NOT_FOUND);
 	}
 
 	/**
 	 * Disable two factor authentication providers for specific user
 	 *
 	 * @param string $user system user identifier
-	 * @param list<string> $providers collection of TFA provider ids
+	 * @param array<string> $providers collection of TFA provider ids
 	 * 
-	 * @return DataResponse<Http::STATUS_OK|Http::STATUS_NOT_FOUND, list{string: bool}, array{}>
+	 * @return DataResponse<Http::STATUS_OK, array<string, bool>, array{}>|DataResponse<Http::STATUS_NOT_FOUND, null, array{}>
 	 *
 	 * 200: provider states
 	 * 404: user not found
@@ -93,15 +91,13 @@ class TwoFactorApiController extends \OCP\AppFramework\OCSController {
 	public function disable(string $user, array $providers = []): DataResponse {
 		$userObject = $this->userManager->get($user);
 		if ($userObject !== null) {
-			if (is_array($providers)) {
-				foreach ($providers as $providerId) {
-					$this->tfManager->tryDisableProviderFor($providerId, $userObject);
-				}
+			foreach ($providers as $providerId) {
+				$this->tfManager->tryDisableProviderFor($providerId, $userObject);
 			}
 			$state = $this->tfRegistry->getProviderStates($userObject);
 			return new DataResponse($state);
 		}
-		return new DataResponse([], Http::STATUS_NOT_FOUND);
+		return new DataResponse(null, Http::STATUS_NOT_FOUND);
 	}
 
 }
