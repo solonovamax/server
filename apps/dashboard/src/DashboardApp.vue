@@ -39,7 +39,7 @@
 							{{ t('dashboard', '"{title} icon"', { title: apiWidgets[panels[panelId].id].title }) }}
 						</span>
 					</div>
-					<div class="panel--content">
+					<div class="panel--content" :id="`panel-${panels[panelId].id}`">
 						<ApiDashboardWidget :widget="apiWidgets[panels[panelId].id]"
 							:data="apiWidgetItems[panels[panelId].id]"
 							:loading="loadingItems" />

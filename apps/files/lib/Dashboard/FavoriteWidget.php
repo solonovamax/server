@@ -23,22 +23,23 @@ use OCP\IPreview;
 use OCP\ITagManager;
 use OCP\IURLGenerator;
 use OCP\IUserManager;
+use OCP\Util;
 
 class FavoriteWidget implements IIconWidget, IAPIWidgetV2, IButtonWidget {
 	public function __construct(
-		private readonly IL10N             $l10n,
-		private readonly IURLGenerator     $urlGenerator,
+		private readonly IL10N $l10n,
+		private readonly IURLGenerator $urlGenerator,
 		private readonly IMimeTypeDetector $mimeTypeDetector,
-		private readonly IUserManager      $userManager,
-		private readonly ITagManager       $tagManager,
-		private readonly IRootFolder       $rootFolder,
-		private readonly IPreview          $previewManager,
+		private readonly IUserManager $userManager,
+		private readonly ITagManager $tagManager,
+		private readonly IRootFolder $rootFolder,
+		private readonly IPreview $previewManager,
 	) {
 
 	}
 
 	public function getId(): string {
-		return Application::APP_ID.'-favorites';
+		return Application::APP_ID . '-favorites';
 	}
 
 	public function getTitle(): string {
@@ -60,14 +61,14 @@ class FavoriteWidget implements IIconWidget, IAPIWidgetV2, IButtonWidget {
 	}
 
 	public function getUrl(): ?string {
-		return $this->urlGenerator->getAbsoluteURL('index.php/apps/files/favorites');
+		return $this->urlGenerator->linkToRouteAbsolute('files.View.indexView', ['view' => 'favorites']);
 	}
 
 	public function load(): void {
-		return;
+		Util::addStyle('files', 'style');
 	}
 
-	public function getItems(string $userId, ?string $since = null, int $limit = 7): array {
+	public function getItems(string $userId, int $limit = 7): array {
 		$user = $this->userManager->get($userId);
 
 		if (!$user) {
@@ -84,7 +85,7 @@ class FavoriteWidget implements IIconWidget, IAPIWidgetV2, IButtonWidget {
 			$node = $userFolder->getFirstNodeById($favorite);
 			if ($node) {
 				$url = $this->urlGenerator->linkToRouteAbsolute(
-					'files.viewcontroller.showFile', ['fileid' => $node->getId()]
+					'files.view.showFile', ['fileid' => $node->getId()]
 				);
 				if ($this->previewManager->isAvailable($node)) {
 					$icon = $this->urlGenerator->linkToRouteAbsolute('core.Preview.getPreviewByFileId', [
@@ -108,11 +109,11 @@ class FavoriteWidget implements IIconWidget, IAPIWidgetV2, IButtonWidget {
 			}
 		}
 
-		return $favoriteNodes;
+		return array_slice($favoriteNodes, 0, $limit);
 	}
 
 	public function getItemsV2(string $userId, ?string $since = null, int $limit = 7): WidgetItems {
-		$items = $this->getItems($userId, $since, $limit);
+		$items = $this->getItems($userId, $limit);
 		return new WidgetItems(
 			$items,
 			count($items) === 0 ? $this->l10n->t('No favorites') : '',
@@ -123,7 +124,7 @@ class FavoriteWidget implements IIconWidget, IAPIWidgetV2, IButtonWidget {
 		return [
 			new WidgetButton(
 				WidgetButton::TYPE_MORE,
-				$this->urlGenerator->getAbsoluteURL('index.php/apps/files/favorites'),
+				$this->urlGenerator->linkToRouteAbsolute('files.View.indexView', ['view' => 'favorites']),
 				$this->l10n->t('More favorites')
 			),
 		];
