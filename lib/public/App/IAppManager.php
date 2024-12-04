@@ -186,8 +186,17 @@ interface IAppManager {
 	 *
 	 * @return string[]
 	 * @since 8.1.0
+	 * @deprecated 31.0.0 Use either {@see self::getEnabledApps} or {@see self::getEnabledAppsForUser}
 	 */
 	public function getInstalledApps();
+
+	/**
+	 * List all apps enabled, either for everyone or for specific groups only
+	 *
+	 * @return list<string>
+	 * @since 31.0
+	 */
+	public function getEnabledApps(): array;
 
 	/**
 	 * Clear the cached list of apps when enabling/disabling an app
