@@ -746,8 +746,8 @@ class UserConfigTest extends TestCase {
 	public function testSearchValuesByUsers(
 		string $app,
 		string $key,
-		?ValueType $typedAs = null,
-		?array $userIds = null,
+		?ValueType $typedAs,
+		?array $userIds,
 		array $result,
 	): void {
 		$userConfig = $this->generateUserConfig();
