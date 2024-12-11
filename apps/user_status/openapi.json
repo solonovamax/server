@@ -111,8 +111,7 @@
                     "id",
                     "icon",
                     "message",
-                    "clearAt",
-                    "visible"
+                    "clearAt"
                 ],
                 "properties": {
                     "id": {
@@ -129,8 +128,7 @@
                         "nullable": true
                     },
                     "visible": {
-                        "type": "boolean",
-                        "nullable": true
+                        "type": "boolean"
                     }
                 }
             },
