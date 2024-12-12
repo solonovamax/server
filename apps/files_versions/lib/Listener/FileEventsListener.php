@@ -384,7 +384,7 @@ class FileEventsListener implements IEventListener {
 
 		$owner = $node->getOwner()?->getUid();
 
-		if ($owner !== null) {
+		if ($owner !== null && $owner !== '') {
 			$path = $this->rootFolder
 				->getUserFolder($owner)
 				->getRelativePath($node->getPath());
@@ -402,6 +402,10 @@ class FileEventsListener implements IEventListener {
 		$parts = explode('/', $node->getPath(), 4);
 		if (count($parts) === 4) {
 			$owner = $parts[1];
+		}
+
+		if($owner === '' || $owner === null) {
+			return null;
 		}
 
 		return $this->rootFolder
