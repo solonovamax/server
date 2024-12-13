@@ -79,7 +79,9 @@ class GetConfig extends Base {
 			if (!$input->hasParameterOption('--default-value')) {
 				return 1;
 			}
-			$configValue = $defaultValue;
+
+			// get the default value defined from lexicon
+			$configValue = $this->appConfig->getValueMixed($appName, $configName, $defaultValue ?? '');
 		}
 
 		$this->writeMixedInOutputFormat($input, $output, $configValue);

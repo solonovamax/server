@@ -71,6 +71,7 @@ class UserConfig implements IUserConfig {
 
 	public function __construct(
 		protected IDBConnection $connection,
+		protected IConfig $config,
 		protected LoggerInterface $logger,
 		protected ICrypto $crypto,
 	) {
@@ -1843,7 +1844,9 @@ class UserConfig implements IUserConfig {
 		}
 
 		$lazy = $configValue->isLazy();
-		$default = $configValue->getDefault() ?? $default; // default from Lexicon got priority
+		// default from Lexicon got priority but it can still be overwritten by admin
+		// with 'lexicon.default.userconfig' => [<app>.<key> => 'my value'], in config.php
+		$default = $this->config->getSystemValue('lexicon.default.userconfig', [])[$app . '.' . $key] ?? $configValue->getDefault() ?? $default;
 		$flags = $configValue->getFlags();
 
 		if ($configValue->isDeprecated()) {
