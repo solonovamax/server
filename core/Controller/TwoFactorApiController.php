@@ -10,10 +10,10 @@ namespace OC\Core\Controller;
 
 use OC\Authentication\TwoFactorAuth\ProviderManager;
 use OCP\AppFramework\Http;
-use OCP\Authentication\TwoFactorAuth\IRegistry;
 use OCP\AppFramework\Http\Attribute\ApiRoute;
 use OCP\AppFramework\Http\Attribute\PublicPage;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\Authentication\TwoFactorAuth\IRegistry;
 use OCP\IRequest;
 use OCP\IUserManager;
 
@@ -31,8 +31,8 @@ class TwoFactorApiController extends \OCP\AppFramework\OCSController {
 	/**
 	 * Get two factor authentication provider states
 	 *
-	 * @param array<string> $users collection of system user ids
-	 * 
+	 * @param list<string> $users collection of system user ids
+	 *
 	 * @return DataResponse<Http::STATUS_OK, array<string, array<string, bool>>, array{}>
 	 *
 	 * 200: user/provider states
@@ -54,8 +54,8 @@ class TwoFactorApiController extends \OCP\AppFramework\OCSController {
 	 * Enable two factor authentication providers for specific user
 	 *
 	 * @param string $user system user identifier
-	 * @param array<string> $providers collection of TFA provider ids
-	 * 
+	 * @param list<string> $providers collection of TFA provider ids
+	 *
 	 * @return DataResponse<Http::STATUS_OK, array<string, bool>, array{}>|DataResponse<Http::STATUS_NOT_FOUND, null, array{}>
 	 *
 	 * 200: provider states
@@ -79,8 +79,8 @@ class TwoFactorApiController extends \OCP\AppFramework\OCSController {
 	 * Disable two factor authentication providers for specific user
 	 *
 	 * @param string $user system user identifier
-	 * @param array<string> $providers collection of TFA provider ids
-	 * 
+	 * @param list<string> $providers collection of TFA provider ids
+	 *
 	 * @return DataResponse<Http::STATUS_OK, array<string, bool>, array{}>|DataResponse<Http::STATUS_NOT_FOUND, null, array{}>
 	 *
 	 * 200: provider states
