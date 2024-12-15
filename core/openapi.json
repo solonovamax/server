@@ -7073,10 +7073,10 @@
         },
         "/ocs/v2.php/twofactor/state": {
             "post": {
-                "operationId": "twofactor-state",
+                "operationId": "two_factor_api-state",
                 "summary": "Get Two Factor state of specific users",
                 "tags": [
-                    "twofactor"
+                    "two_factor_api"
                 ],
                 "security": [
                     {
@@ -7156,10 +7156,10 @@
         },
         "/ocs/v2.php/twofactor/enable": {
             "post": {
-                "operationId": "twofactor-enable",
+                "operationId": "two_factor_api-enable",
                 "summary": "Enable Two Factor Authentication for a specific user and specific TFA provider. Not all TFA providers can be enabled this way, some require user interaction",
                 "tags": [
-                    "twofactor"
+                    "two_factor_api"
                 ],
                 "security": [
                     {
@@ -7237,10 +7237,10 @@
         },
         "/ocs/v2.php/twofactor/disable": {
             "post": {
-                "operationId": "twofactor-disable",
+                "operationId": "two_factor_api-disable",
                 "summary": "Disable Two Factor Authentication for a specific user and specific TFA provider",
                 "tags": [
-                    "twofactor"
+                    "two_factor_api"
                 ],
                 "security": [
                     {
